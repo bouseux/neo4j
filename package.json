@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "description": "A package for neo4j support written for a project at the corporate university of applied science.",
     "author": "Lars Tilsner <lars.tilsner@googlemail.com>",
+    "contributors" : "Tarek Auel",
     "main": "lib/server.js",
     "repository": {
         "type" : "git",
