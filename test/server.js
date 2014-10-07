@@ -1,7 +1,8 @@
 /**
  * Created by Lars on 04.10.2014.
  */
-var server = require('./../lib/server.js');
+var server = require('./../lib/server.js'),
+    logger = require('./../lib/logger.js');
 
 module.exports = {
     setOptionsTests: {
@@ -98,7 +99,7 @@ module.exports = {
     cypherQueryTests: {
         setOnlyCypher: function (test) {
             var cypher = 'MATCH N RETURN N';
-            var error = server.executeCypher(cypher);
+            var error = server.query(cypher);
             if (error) {
                 test.fail('Should not have failed');
             }
@@ -106,7 +107,7 @@ module.exports = {
         },
         setCallbackCypher: function (test) {
             var cypher = 'MATCH N DELETE N';
-            server.executeCypher(cypher, function() {
+            server.query(cypher, function() {
                     test.done();
                 }
             );
@@ -118,7 +119,7 @@ module.exports = {
                     '       (b:TestNode2 {prop:\'Value1\'}), ' +
                     '       (:TestNode2 {prop:\'Value2\'}),' +
                     '       (a)-[:testRel {propRel:\'ValueR\'}]->(b)';
-                server.executeCypher(cypher, function (err) {
+                server.query(cypher, function (err) {
                     if (err) {
                         //TODO: logging
                         return;
@@ -128,7 +129,7 @@ module.exports = {
             },
             tearDown: function(callback) {
                 var cypher = 'MATCH (t:TestNode), (t2:TestNode2) OPTIONAL MATCH (t)-[r]->() DELETE r, t, t2';
-                server.executeCypher(cypher,  function (err) {
+                server.query(cypher,  function (err) {
                     if (err) {
                         //TODO: logging
                         return;
@@ -138,7 +139,7 @@ module.exports = {
             },
             nodeResponse: function(test) {
                 var cypher = 'MATCH (t:TestNode) RETURN t';
-                server.executeCypher(cypher, function(err, data) {
+                server.query(cypher, function(err, data) {
                     if (err) {
                         test.fail('No error expected');
                         test.done();
@@ -157,7 +158,7 @@ module.exports = {
             },
             tableLineResponse: function(test) {
                 var cypher = 'MATCH (t:TestNode) RETURN t.prop as prop';
-                server.executeCypher(cypher, function(err, data) {
+                server.query(cypher, function(err, data) {
                     if (err) {
                         logger.error(err);
                         test.fail('No error expected');
@@ -175,7 +176,7 @@ module.exports = {
             },
             tableLineNodeResponseMix: function(test) {
                 var cypher = 'MATCH (t:TestNode) RETURN t, t.prop as prop';
-                server.executeCypher(cypher, function(err, data) {
+                server.query(cypher, function(err, data) {
                     if (err) {
                         logger.error(err);
                         test.fail('No error expected');
@@ -196,7 +197,7 @@ module.exports = {
             },
             collectionResponse: function(test) {
                 var cypher = 'MATCH (t:TestNode) RETURN labels(t) as labels';
-                server.executeCypher(cypher, function(err, data) {
+                server.query(cypher, function(err, data) {
                     if (err) {
                         logger.error(err);
                         test.fail('No error expected');
@@ -214,7 +215,7 @@ module.exports = {
             },
             multipleResponseNodes: function(test) {
                 var cypher = 'MATCH (t:TestNode2) RETURN t ORDER BY t.prop';
-                server.executeCypher(cypher, function(err, data) {
+                server.query(cypher, function(err, data) {
                     if (err) {
                         test.fail('No error expected' + err);
                         test.done();
@@ -238,7 +239,7 @@ module.exports = {
             },
             relationshipResponse: function(test) {
                 var cypher = 'MATCH (t:TestNode)-[r]->(t2) RETURN t, r, type(r) as type, t2';
-                server.executeCypher(cypher, function(err, data) {
+                server.query(cypher, function(err, data) {
                     if (err) {
                         test.fail('No error expected' + err);
                         test.done();
@@ -266,11 +267,21 @@ module.exports = {
         cypherErrors: {
             syntaxError: function(test) {
                 var cypher = 'MATCH n DELETE X';
-                server.executeCypher(cypher, function (err) {
+                server.query(cypher, function (err) {
                     test.equal(err.type, 'SyntaxException');
                     test.done();
                 });
             }
         }
+    },
+    runningTest: {
+        checkIfRunning: function(test){
+            server.databaseIsRunning(function(running){
+                test.equal(running, true);
+                test.done();
+            });
+
+        }
     }
+
 };
