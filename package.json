@@ -2,8 +2,12 @@
   "name": "neo4j",
   "version": "0.0.2",
   "description": "A package for neo4j support written for a project at the corporate university of applied science.",
-  "author": "Lars Tilsner <lars.tilsner@googlemail.com>",
-  "contributors": "Tarek Auel",
+  "author": [{
+    "name" : "Lars Tilsner"
+    "email": "lars.tilsner@googlemail.com"
+  },{
+    "name" : "Tarek Auel"
+  }]
   "main": "lib/server.js",
   "repository": {
     "type": "git",
