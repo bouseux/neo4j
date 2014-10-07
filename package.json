@@ -1,16 +1,23 @@
 {
-  "name": "neo4j",
-  "version": "0.0.1",
-  "description": "A package for neo4j support written for a project at the corporate university of applied science.",
-  "author": "Lars Tilsner <lars.tilsner@googlemail.com>",
-  "contributors": "Tarek Auel",
-  "main": "lib/server.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/WISEA12/neo4j.git"
-  },
-  "private": true,
-  "dependencies": {
-    "winston": "^0.8.1"
-  }
+    "name": "neo4j",
+    "version": "0.0.3",
+    "description": "A package for neo4j support written for a project at the corporate university of applied science.",
+    "author": [
+        {
+            "name": "Lars Tilsner",
+            "email": "lars.tilsner@googlemail.com"
+        },
+        {
+            "name": "Tarek Auel"
+        }
+    ],
+    "main": "lib/server.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/WISEA12/neo4j.git"
+    },
+    "private": true,
+    "dependencies": {
+        "winston": "^0.8.1"
+    }
 }

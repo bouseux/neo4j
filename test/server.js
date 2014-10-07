@@ -1,7 +1,8 @@
 /**
  * Created by Lars on 04.10.2014.
  */
-var server = require('./../lib/server.js');
+var server = require('./../lib/server.js'),
+    logger = require('./../lib/logger.js');
 
 module.exports = {
     setOptionsTests: {
@@ -106,211 +107,190 @@ module.exports = {
     },
     cypherQueryTests: {
         setOnlyCypher: function (test) {
-            var object = {
-                cypher: 'MATCH N RETURN N'
-            };
-            var error = server.executeCypher(object);
+            var cypher = 'MATCH N RETURN N';
+            var error = server.query(cypher);
             if (error) {
                 test.fail('Should not have failed');
             }
             test.done();
         },
         setCallbackCypher: function (test) {
-            var object = {
-                cypher: 'MATCH N DELETE N',
-                callback: function () {
+            var cypher = 'MATCH N DELETE N';
+            server.query(cypher, function() {
                     test.done();
                 }
-            };
-            server.executeCypher(object);
+            );
         },
         cypherResponse: {
             setUp: function(callback) {
-                var object = {
-                    cypher:
-                        'CREATE (a:TestNode {prop:\'Value\'}), ' +
-                        '       (b:TestNode2 {prop:\'Value1\'}), ' +
-                        '       (:TestNode2 {prop:\'Value2\'}),' +
-                        '       (a)-[:testRel {propRel:\'ValueR\'}]->(b)',
-                    callback: function (err) {
-                        if (err) {
-                            //TODO: logging
-                            return;
-                        }
-                        callback();
+                var cypher =
+                    'CREATE (a:TestNode {prop:\'Value\'}), ' +
+                    '       (b:TestNode2 {prop:\'Value1\'}), ' +
+                    '       (:TestNode2 {prop:\'Value2\'}),' +
+                    '       (a)-[:testRel {propRel:\'ValueR\'}]->(b)';
+                server.query(cypher, function (err) {
+                    if (err) {
+                        //TODO: logging
+                        return;
                     }
-                };
-                server.executeCypher(object);
+                    callback();
+                });
             },
             tearDown: function(callback) {
-                var object = {
-                    cypher: 'MATCH (t:TestNode), (t2:TestNode2) OPTIONAL MATCH (t)-[r]->() DELETE r, t, t2',
-                    callback: function (err) {
-                        if (err) {
-                            //TODO: logging
-                            return;
-                        }
-                        callback();
+                var cypher = 'MATCH (t:TestNode), (t2:TestNode2) OPTIONAL MATCH (t)-[r]->() DELETE r, t, t2';
+                server.query(cypher,  function (err) {
+                    if (err) {
+                        //TODO: logging
+                        return;
                     }
-                };
-                server.executeCypher(object);
+                    callback();
+                });
             },
             nodeResponse: function(test) {
-                var object = {
-                    cypher: 'MATCH (t:TestNode) RETURN t',
-                    callback: function(err, data) {
-                        if (err) {
-                            test.fail('No error expected');
-                            test.done();
-                            return;
-                        }
-                        var expectedData = [
-                            {
-                                t: {
-                                    prop: 'Value'
-                                }
-                            }
-                        ];
-                        test.equals(JSON.stringify(data), JSON.stringify(expectedData));
+                var cypher = 'MATCH (t:TestNode) RETURN t';
+                server.query(cypher, function(err, data) {
+                    if (err) {
+                        test.fail('No error expected');
                         test.done();
+                        return;
                     }
-                };
-                server.executeCypher(object);
+                    var expectedData = [
+                        {
+                            t: {
+                                prop: 'Value'
+                            }
+                        }
+                    ];
+                    test.equals(JSON.stringify(data), JSON.stringify(expectedData));
+                    test.done();
+                });
             },
             tableLineResponse: function(test) {
-                var object = {
-                    cypher: 'MATCH (t:TestNode) RETURN t.prop as prop',
-                    callback: function(err, data) {
-                        if (err) {
-                            logger.error(err);
-                            test.fail('No error expected');
-                            test.done();
-                            return;
-                        }
-                        var expectedData = [
-                            {
-                                prop: 'Value'
-                            }
-                        ];
-                        test.equals(JSON.stringify(data), JSON.stringify(expectedData));
+                var cypher = 'MATCH (t:TestNode) RETURN t.prop as prop';
+                server.query(cypher, function(err, data) {
+                    if (err) {
+                        logger.error(err);
+                        test.fail('No error expected');
                         test.done();
+                        return;
                     }
-                };
-                server.executeCypher(object);
+                    var expectedData = [
+                        {
+                            prop: 'Value'
+                        }
+                    ];
+                    test.equals(JSON.stringify(data), JSON.stringify(expectedData));
+                    test.done();
+                });
             },
             tableLineNodeResponseMix: function(test) {
-                var object = {
-                    cypher: 'MATCH (t:TestNode) RETURN t, t.prop as prop',
-                    callback: function(err, data) {
-                        if (err) {
-                            logger.error(err);
-                            test.fail('No error expected');
-                            test.done();
-                            return;
-                        }
-                        var expectedData = [
-                            {
-                                t: {
-                                    prop: 'Value'
-                                },
-                                prop: 'Value'
-                            }
-                        ];
-                        test.equals(JSON.stringify(data), JSON.stringify(expectedData));
+                var cypher = 'MATCH (t:TestNode) RETURN t, t.prop as prop';
+                server.query(cypher, function(err, data) {
+                    if (err) {
+                        logger.error(err);
+                        test.fail('No error expected');
                         test.done();
+                        return;
                     }
-                };
-                server.executeCypher(object);
+                    var expectedData = [
+                        {
+                            t: {
+                                prop: 'Value'
+                            },
+                            prop: 'Value'
+                        }
+                    ];
+                    test.equals(JSON.stringify(data), JSON.stringify(expectedData));
+                    test.done();
+                });
             },
             collectionResponse: function(test) {
-                var object = {
-                    cypher: 'MATCH (t:TestNode) RETURN labels(t) as labels',
-                    callback: function(err, data) {
-                        if (err) {
-                            logger.error(err);
-                            test.fail('No error expected');
-                            test.done();
-                            return;
-                        }
-                        var expectedData = [
-                            {
-                                labels: ['TestNode']
-                            }
-                        ];
-                        test.equals(JSON.stringify(data), JSON.stringify(expectedData));
+                var cypher = 'MATCH (t:TestNode) RETURN labels(t) as labels';
+                server.query(cypher, function(err, data) {
+                    if (err) {
+                        logger.error(err);
+                        test.fail('No error expected');
                         test.done();
+                        return;
                     }
-                };
-                server.executeCypher(object);
+                    var expectedData = [
+                        {
+                            labels: ['TestNode']
+                        }
+                    ];
+                    test.equals(JSON.stringify(data), JSON.stringify(expectedData));
+                    test.done();
+                });
             },
             multipleResponseNodes: function(test) {
-                var object = {
-                    cypher: 'MATCH (t:TestNode2) RETURN t ORDER BY t.prop',
-                    callback: function(err, data) {
-                        if (err) {
-                            test.fail('No error expected' + err);
-                            test.done();
-                            return;
-                        }
-                        var expectedData = [
-                            {
-                                t: {
-                                    prop: 'Value1'
-                                }
-                            },
-                            {
-                                t: {
-                                    prop: 'Value2'
-                                }
-                            }
-                        ];
-                        test.equals(JSON.stringify(data), JSON.stringify(expectedData));
+                var cypher = 'MATCH (t:TestNode2) RETURN t ORDER BY t.prop';
+                server.query(cypher, function(err, data) {
+                    if (err) {
+                        test.fail('No error expected' + err);
                         test.done();
+                        return;
                     }
-                };
-                server.executeCypher(object);
+                    var expectedData = [
+                        {
+                            t: {
+                                prop: 'Value1'
+                            }
+                        },
+                        {
+                            t: {
+                                prop: 'Value2'
+                            }
+                        }
+                    ];
+                    test.equals(JSON.stringify(data), JSON.stringify(expectedData));
+                    test.done();
+                });
             },
             relationshipResponse: function(test) {
-                var object = {
-                    cypher: 'MATCH (t:TestNode)-[r]->(t2) RETURN t, r, type(r) as type, t2',
-                    callback: function(err, data) {
-                        if (err) {
-                            test.fail('No error expected' + err);
-                            test.done();
-                            return;
-                        }
-                        var expectedData = [
-                            {
-                                t: {
-                                    prop: 'Value'
-                                },
-                                r: {
-                                    propRel: 'ValueR'
-                                },
-                                type: 'testRel',
-                                t2: {
-                                    prop: 'Value1'
-                                }
-                            }
-                        ];
-                        test.equals(JSON.stringify(data), JSON.stringify(expectedData));
+                var cypher = 'MATCH (t:TestNode)-[r]->(t2) RETURN t, r, type(r) as type, t2';
+                server.query(cypher, function(err, data) {
+                    if (err) {
+                        test.fail('No error expected' + err);
                         test.done();
+                        return;
                     }
-                };
-                server.executeCypher(object);
+                    var expectedData = [
+                        {
+                            t: {
+                                prop: 'Value'
+                            },
+                            r: {
+                                propRel: 'ValueR'
+                            },
+                            type: 'testRel',
+                            t2: {
+                                prop: 'Value1'
+                            }
+                        }
+                    ];
+                    test.equals(JSON.stringify(data), JSON.stringify(expectedData));
+                    test.done();
+                });
             }
         },
         cypherErrors: {
             syntaxError: function(test) {
-                var object = {
-                    cypher: 'MATCH n DELETE X',
-                    callback: function (err) {
-                        test.equal(err.type, 'SyntaxException');
-                        test.done();
-                    }
-                };
-                server.executeCypher(object);
+                var cypher = 'MATCH n DELETE X';
+                server.query(cypher, function (err) {
+                    test.equal(err.type, 'SyntaxException');
+                    test.done();
+                });
             }
         }
+    },
+    runningTest: {
+        checkIfRunning: function(test){
+            server.databaseIsRunning(function(running){
+                test.equal(running, true);
+                test.done();
+            });
+
+        }
     }
+
 };

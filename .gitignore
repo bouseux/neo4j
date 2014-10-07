@@ -1,10 +1,7 @@
-.idea/*.*
+.idea
 # Logs
 logs
 *.log
-
-# ignore frontend
-frontend/*.*
 
 # Runtime data
 pids
