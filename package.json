@@ -7,7 +7,7 @@
     "main": "lib/server.js",
     "repository": {
         "type" : "git",
-        "url" : "https://github.com/WISEA12/neo4j"
+        "url" : "https://github.com/WISEA12/neo4j.git"
     },
     "private": true
 }
