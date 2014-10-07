@@ -23,7 +23,7 @@ module.exports = {
             }
             test.done();
         },
-        setInvalidPortNegativ: function (test) {
+        setInvalidPortNegative: function (test) {
             var options = {
                     host: 'localhost',
                     port: '-1',
