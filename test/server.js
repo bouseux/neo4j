@@ -268,7 +268,7 @@ module.exports = {
             syntaxError: function(test) {
                 var cypher = 'MATCH n DELETE X';
                 server.query(cypher, function (err) {
-                    test.equal(err.type, 'SyntaxException');
+                    test.equal(err.code, 'Neo.ClientError.Statement.InvalidSyntax');
                     test.done();
                 });
             }
