@@ -96,6 +96,15 @@ module.exports = {
             test.done();
         }
     },
+    databaseIsRunning: {
+        databaseIsRunning: function(test) {
+
+            server.databaseIsRunning(function(running){
+                test.equal(running, true);
+                test.done();
+            });
+        }
+    },
     cypherQueryTests: {
         setOnlyCypher: function (test) {
             var cypher = 'MATCH N RETURN N';
