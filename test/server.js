@@ -11,7 +11,7 @@ module.exports = {
                     host: 'localhost',
                     port: '7475',
                     method: 'POST',
-                    path: '/db/data/cypher?includeStats=true',
+                    path: '/db/data/transaction/commit',
                     headers: {
                         'Accept': 'application/json; charset=UTF-8',
                         'Content-Type': 'application/json'
@@ -22,6 +22,9 @@ module.exports = {
             if (returnValue) {
                 test.fail("Should not give an response");
             }
+            if (server.getOptions() !== options) {
+                test.fail("Options are not set correctly");
+            }
             test.done();
         },
         setInvalidPortNegative: function (test) {
@@ -29,7 +32,7 @@ module.exports = {
                     host: 'localhost',
                     port: '-1',
                     method: 'POST',
-                    path: '/db/data/cypher?includeStats=true',
+                    path: '/db/data/transaction/commit',
                     headers: {
                         'Accept': 'application/json; charset=UTF-8',
                         'Content-Type': 'application/json'
@@ -47,7 +50,7 @@ module.exports = {
                     host: 'localhost',
                     port: '666666',
                     method: 'POST',
-                    path: '/db/data/cypher?includeStats=true',
+                    path: '/db/data/transaction/commit',
                     headers: {
                         'Accept': 'application/json; charset=UTF-8',
                         'Content-Type': 'application/json'
@@ -64,7 +67,7 @@ module.exports = {
                     host: 'localhost',
                     port: 'abc',
                     method: 'POST',
-                    path: '/db/data/cypher?includeStats=true',
+                    path: '/db/data/transaction/commit',
                     headers: {
                         'Accept': 'application/json; charset=UTF-8',
                         'Content-Type': 'application/json'
@@ -81,7 +84,7 @@ module.exports = {
             var options = {
                     port: 'abc',
                     method: 'POST',
-                    path: '/db/data/cypher?includeStats=true',
+                    path: '/db/data/transaction/commit',
                     headers: {
                         'Accept': 'application/json; charset=UTF-8',
                         'Content-Type': 'application/json'
