@@ -278,10 +278,20 @@ module.exports = {
             }
         },
         cypherErrors: {
-            syntaxError: function(test) {
+            syntaxError: function (test) {
                 var cypher = 'MATCH n DELETE X';
                 server.query(cypher, function (err) {
                     test.equal(err.code, 'Neo.ClientError.Statement.InvalidSyntax');
+                    test.done();
+                });
+            }
+        },
+        other: {
+            emptyResult: function (test) {
+                var cypher = "OPTIONAL MATCH (n) WITH null as test RETURN test Limit 1";
+                server.query(cypher, function (err, data) {
+                    var expectedData = [{test: null}];
+                    test.equals(JSON.stringify(data),JSON.stringify(expectedData));
                     test.done();
                 });
             }
