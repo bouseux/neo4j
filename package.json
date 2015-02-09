@@ -1,11 +1,10 @@
 {
     "name": "neo4j",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "A package for neo4j support written for a project at the corporate university of applied science.",
     "author": [
         {
-            "name": "Lars Tilsner",
-            "email": "lars.tilsner@googlemail.com"
+            "name": "Lars Tilsner"
         },
         {
             "name": "Tarek Auel"
