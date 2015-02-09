@@ -1,7 +1,15 @@
 /**
  * Created by Lars on 04.10.2014.
  */
-var server = require('./../lib/server.js'),
+var server = new (require('./../lib/server.js'))({
+        host: 'localhost',
+        port: '7475',
+        method: 'POST',
+        path: '/db/data/transaction/commit',
+        headers: {
+            'Accept': 'application/json; charset=UTF-8',
+            'Content-Type': 'application/json'
+        }}),
     logger = require('./../lib/logger.js');
 
 module.exports = {
@@ -16,12 +24,9 @@ module.exports = {
                         'Accept': 'application/json; charset=UTF-8',
                         'Content-Type': 'application/json'
                     }
-                },
-                returnValue = server.setOptions(options);
+                };
+            var server = new (require('./../lib/server.js'))(options);
 
-            if (returnValue) {
-                test.fail("Should not give an response");
-            }
             if (server.getOptions() !== options) {
                 test.fail("Options are not set correctly");
             }
@@ -37,12 +42,11 @@ module.exports = {
                         'Accept': 'application/json; charset=UTF-8',
                         'Content-Type': 'application/json'
                     }
-                },
-                returnValue = server.setOptions(options);
-
-            if (!returnValue) {
+                };
+            try {
+                new (require('./../lib/server.js'))(options);
                 test.fail("Should have give an error");
-            }
+            } catch (e) {}
             test.done();
         },
         setInvalidPortToHigh: function (test) {
@@ -55,11 +59,11 @@ module.exports = {
                         'Accept': 'application/json; charset=UTF-8',
                         'Content-Type': 'application/json'
                     }
-                },
-                returnValue = server.setOptions(options);
-            if (!returnValue) {
+                };
+            try {
+                new (require('./../lib/server.js'))(options);
                 test.fail("Should have give an error");
-            }
+            } catch (e) {}
             test.done();
         },
         setInvalidNaN: function (test) {
@@ -72,12 +76,11 @@ module.exports = {
                         'Accept': 'application/json; charset=UTF-8',
                         'Content-Type': 'application/json'
                     }
-                },
-                returnValue = server.setOptions(options);
-
-            if (!returnValue) {
+                };
+            try {
+                new (require('./../lib/server.js'))(options);
                 test.fail("Should have give an error");
-            }
+            } catch (e) {}
             test.done();
         },
         setInvalidObject: function (test) {
@@ -89,12 +92,11 @@ module.exports = {
                         'Accept': 'application/json; charset=UTF-8',
                         'Content-Type': 'application/json'
                     }
-                },
-                returnValue = server.setOptions(options);
-
-            if (!returnValue) {
+                };
+            try {
+                new (require('./../lib/server.js'))(options);
                 test.fail("Should have give an error");
-            }
+            } catch (e) {}
             test.done();
         }
     },
