@@ -9,7 +9,7 @@ module.exports = {
         setOptions: function (test) {
             var options = {
                     host: 'localhost',
-                    port: '7474',
+                    port: '7475',
                     method: 'POST',
                     path: '/db/data/cypher?includeStats=true',
                     headers: {
@@ -54,7 +54,6 @@ module.exports = {
                     }
                 },
                 returnValue = server.setOptions(options);
-
             if (!returnValue) {
                 test.fail("Should have give an error");
             }
