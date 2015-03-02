@@ -109,6 +109,13 @@ module.exports = {
             });
         }
     },
+    databaseVersion: {
+        databaseVersion: function(test) {
+            var version = server.getVersion();
+            test.equal(version,'2.1.4');
+            test.done();
+        }
+    },
     cypherQueryTests: {
         setOnlyCypher: function (test) {
             var cypher = 'MATCH N RETURN N';
