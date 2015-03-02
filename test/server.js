@@ -112,7 +112,11 @@ module.exports = {
     databaseVersion: {
         databaseVersion: function(test) {
             var version = server.getVersion();
-            test.equal(version,'2.1.4');
+            if(version === '2.1.4' || version === '2.1.7'){
+                test.ok(true, 'This version is supported');
+            }else{
+                test.ok(false, 'Not supported version ' + version);
+            }
             test.done();
         }
     },
