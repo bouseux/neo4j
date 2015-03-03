@@ -6,5 +6,10 @@ Due to changes in the Response of the neo4j database there is support for differ
 This may help to still get updates of neo4j and dont change any code in the main project.
 
 ## Supported versions of Neo4j
-[X] Version 2.1.4
-[ ] Version 2.1.7
+  - 2.0.4
+  - 2.1.1
+  - 2.1.2
+  - 2.1.3
+  - 2.1.4
+  - 2.1.5
+  - 2.1.7
